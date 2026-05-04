@@ -1,0 +1,23 @@
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~ Projektspezifische Makros ~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
+% Shortcuts für häufig wiederkehrende Begriffe
+\newcommand{\asw}{ASW}
+
+% Wenn nach den 3 Ebenen nach \subsubsection eine weitere Gliederungsebene benötigt wird
+\newcommand{\paragraphheader}[1]{\paragraph{#1}\mbox{}\\}
+
+% Vordefinierte Arten der Fußnoten. 
+% Die Struktur kann an dieser Stelle geändert werden und betrifft jede Verwendung im gesamten Dokument,
+% was praktisch sein kann, falls der Betreuer oder Gutachter zb. die ausgeschriebene Variante von "Vgl." bevorzugt.
+\newcommand{\vgl}[2]{\footcite[Vgl.][#2]{#1}} % chktex 9 chktex 10
+\newcommand{\footrefnote}[2]{\footnote{Für das Thema #1 siehe Kapitel~\ref{#2}}}
+\newcommand{\wholesection}[2]{\footcite[Für den gesamten Abschnitt vgl.][#2]{#1}} % chktex 9 chktex 10
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Silbentrennung ~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
+% Falls LaTeX Wörter nicht richtig trennt können hier eigene Angaben in folgendem Stil gemacht werden
+\hyphenation{Java-Script} % chktex 17

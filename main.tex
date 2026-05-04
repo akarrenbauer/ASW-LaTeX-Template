@@ -11,7 +11,32 @@
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Präambel ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
-\input{environment/praeambel}
+\usepackage[
+  %titlepage=modern,
+  %blockingnotefile=environment/sperrvermerk.tex,
+  bibfile=references.bib,
+  embedfile=onlinequellen.zip,
+  appendixfile=sections/anhang.tex,
+  declarationfile=environment/pers_erklaerung.tex,
+  thesis=Bachelorarbeit
+]{aswthesis}
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~ Informationen über die Arbeit ~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
+\title{\LaTeX-Template für wissenschaftliche Arbeiten an der \asw}
+\subtitle{Stand Mai 2026}
+\author{Max Mustermann}
+
+% Weitere Variablen innerhalb von LaTeX für das Titelblatt
+\Matrikelnummer{XXXXXXX}
+\Studiengang{Wirtschaftsinformatik}
+\Unternehmen{Dummy Company}
+\Unternehmenslogo{logo_company}
+\Betreuerin{Erika Musterfrau}
+\Gutachter{Prof.\ Dr.\ Andreas Karrenbauer}
+\eingereicht{1.\ Juli 2026}
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Dokument ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
@@ -19,6 +44,6 @@
 
 \begin{document}
 
-\input{environment/inhalt}
+\input{sections/textteil}
 
 \end{document}

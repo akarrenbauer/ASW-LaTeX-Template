@@ -1,0 +1,667 @@
+% ===================== thesisstyle.sty =====================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{aswthesis}[2025/10/07 v1.0 Vorlage für wissenschaftliche Arbeiten an der ASW gGmbH]
+
+% -------- Optionen (kvoptions) --------------------------------
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{family=thesis,prefix=aswthesis@}
+
+% Anpassen per Paketoption:
+%   bibfile=<pfad zur .bib> (Default: references.bib)
+%   imagespath=<bilderpfad/> (Default: images/)
+%   titlepage=classic/modern (Default: classic)
+%   blockingnotefile=<pfad zum Sperrvermerk> (Default: leer)
+%   appendixfile=<pfad zur Anhang-Datei> (Default: leer)
+%   declarationfile=<pfad zur persönlichen Erklärung> (Default: environment/pers_erklaerung.tex)
+%   embedfile=<pfad zur einzubettenden Datei> (Default: leer)
+%   showtitlesinlists=true/false (Default: true)
+%   noparenthesesaroundyear=true/false      (Default: false)  -> Jahreszahl ohne Klammern im Lit.-Verz.
+%   pdfa=true/false             (Default: true)   -> PDF/A-Konfiguration inkl. ICC-Profil
+\DeclareStringOption[references.bib]{bibfile}
+\DeclareStringOption[images/]{imagespath}
+\DeclareStringOption[classic]{titlepage}
+\DeclareStringOption[]{blockingnotefile}
+\DeclareStringOption[]{appendixfile}
+\DeclareStringOption[environment/pers_erklaerung.tex]{declarationfile}
+\DeclareStringOption[]{embedfile}
+\DeclareBoolOption[true]{showtitlesinlists}
+\DeclareBoolOption[false]{noparenthesesaroundyear}
+\DeclareBoolOption[false]{blockingnote}
+\DeclareBoolOption[true]{pdfa}
+\DeclareStringOption[ptm]{rmdefault}
+\DeclareStringOption[Bachelorarbeit]{thesis}
+\ProcessKeyvalOptions*
+
+% -------- Encoding, Sprache, Schriften ------------------------
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[ngerman]{babel}
+\RequirePackage{csquotes}
+\RequirePackage{etoolbox}
+
+% -------- Farben, Einbetten, Layout ---------------------------
+\RequirePackage[rgb]{xcolor}
+\RequirePackage{embedfile}
+\RequirePackage[a4paper,left=3cm,right=2cm,top=3cm,bottom=2.5cm]{geometry}
+\RequirePackage{setspace}
+\renewcommand{\rmdefault}{\aswthesis@rmdefault} % Schriftart: Times New Roman
+
+% -------- Grafiken & Platzierung ------------------------------
+\RequirePackage{graphicx}
+\graphicspath{{\aswthesis@imagespath}}
+\RequirePackage{chngpage}
+\RequirePackage{calc}
+\RequirePackage{float}
+
+% -------- Verlinkungen/Hypers ------------------------------
+\RequirePackage{url}
+\ifaswthesis@pdfa
+  \RequirePackage[pdfa]{hyperref}%
+\else
+  \RequirePackage{hyperref}%
+\fi
+\RequirePackage{hyperxmp}
+
+% -------- Verzeichnisse & Zähler ------------------------------
+\RequirePackage[nottoc,numbib]{tocbibind}
+\RequirePackage{listings}
+\renewcommand{\lstlistlistingname}{Listingverzeichnis}
+\RequirePackage[figure,table,lstlisting]{totalcount}
+
+% -------- Glossare/Akronyme -----------------------------------
+\RequirePackage[acronym, nogroupskip, nonumberlist, nopostdot]{glossaries}
+% Einträge optional laden, falls vorhanden:
+\IfFileExists{environment/acronym.tex}{%
+\loadglsentries{environment/acronym}
+\makenoidxglossaries
+\setacronymstyle{long-sc-short}
+}{}
+
+% -------- Tabellen, Captions, Listen, Fußnoten ----------------
+\RequirePackage[hang]{footmisc}
+\RequirePackage{wrapfig}
+\RequirePackage[font=small, justification=centering]{caption}
+\RequirePackage{booktabs}
+\RequirePackage{enumitem}
+\setlist[itemize]{itemsep=0cm}
+\renewcommand{\footnotemargin}{12pt}
+
+% -------- Konfigurationskommandos -----------------------------
+% Zur Generierung von Blindtext
+\RequirePackage{lipsum}
+
+\date{\today}
+
+\makeatletter
+\def\configcommand#1#2{%
+\expandafter\def\csname #1\endcsname##1{\expandafter\gdef\csname @#1\endcsname{##1}}%
+\expandafter\def\csname @#1\endcsname{#2} % Standardwert = leer
+}
+\makeatother
+
+\ExplSyntaxOn
+\bool_new:N \l_aswthesis_file_has_content_bool
+\ior_new:N \l_aswthesis_content_ior
+\tl_new:N \l_aswthesis_content_line_tl
+\NewDocumentCommand{\aswthesisfilehascontentTF}{mmm}
+  {
+    \bool_set_false:N \l_aswthesis_file_has_content_bool
+    \ior_open:Nn \l_aswthesis_content_ior { #1 }
+    \ior_str_map_inline:Nn \l_aswthesis_content_ior
+      {
+        \tl_set:Nx \l_aswthesis_content_line_tl { \tl_trim_spaces:n { ##1 } }
+        \tl_if_empty:NF \l_aswthesis_content_line_tl
+          {
+            \str_if_eq:eeF
+              { \tl_head:N \l_aswthesis_content_line_tl }
+              { \c_percent_str }
+              {
+                \bool_set_true:N \l_aswthesis_file_has_content_bool
+                \ior_map_break:
+              }
+          }
+      }
+    \ior_close:N \l_aswthesis_content_ior
+    \bool_if:NTF \l_aswthesis_file_has_content_bool { #2 } { #3 }
+  }
+\ExplSyntaxOff
+
+\configcommand{subtitle}{}
+\configcommand{Matrikelnummer}{}
+\configcommand{Studiengang}{}
+\configcommand{Unternehmen}{}
+\configcommand{Unternehmenslogo}{}
+\configcommand{eingereicht}{\today}
+
+\makeatletter
+\def\@Betreuer{}
+\def\@BetreuerBezeichnung{Betrieblicher Betreuer}
+\newcommand{\Betreuer}[2][]{%
+  \gdef\@Betreuer{#2}%
+  \ifstrequal{#1}{w}{%
+    \gdef\@BetreuerBezeichnung{Betriebliche Betreuerin}%
+  }{%
+    \gdef\@BetreuerBezeichnung{Betrieblicher Betreuer}%
+  }%
+}
+\newcommand{\Betreuerin}[1]{\Betreuer[w]{#1}}
+\def\@Gutachter{}
+\def\@GutachterBezeichnung{ASW-Gutachter}
+\newcommand{\Gutachter}[2][]{%
+  \gdef\@Gutachter{#2}%
+  \ifstrequal{#1}{w}{%
+    \gdef\@GutachterBezeichnung{ASW-Gutachterin}%
+  }{%
+    \gdef\@GutachterBezeichnung{ASW-Gutachter}%
+  }%
+}
+\newcommand{\Gutachterin}[1]{\Gutachter[w]{#1}}
+\makeatother
+
+\makeatletter
+\edef\varArbeit{\aswthesis@thesis}
+\newcommand{\varUnternehmen}{\@Unternehmen}
+\ifaswthesis@noparenthesesaroundyear
+    \providecommand{\varNoParenthesesAroundYear}{yes}
+\fi
+\makeatother
+
+% -------- Projektkonfiguration optional laden -----------------
+% Falls vorhanden, projektspezifische Makros laden:
+\IfFileExists{environment/macros.tex}{\input{environment/macros.tex}}{}
+
+% -------- Titelseiten -----------------------------------------
+\makeatletter
+\newcommand{\aswthesis@classictitlepage}{%
+  \newgeometry{top=20mm,bottom=25mm}%
+  \pagenumbering{alph}%
+  \begin{titlepage}
+    \begin{figure}[t]
+      \begin{adjustwidth}{-\oddsidemargin-1in}{-\rightmargin}
+        \minipage{0pt}
+          \noindent
+          \makebox[0pt][l]{%
+            \raisebox{-\totalheight}[0pt][0pt]{%
+              \includegraphics[width=\paperwidth]{titlepage/banner_top}%
+            }%
+          }%
+        \endminipage
+
+        \vspace*{10mm}
+        \minipage{0.075\paperwidth}
+          \hfill
+        \endminipage
+        \minipage{0.2475\paperwidth}
+          \includegraphics[width=\linewidth]{titlepage/logo_asw_rgb}%
+        \endminipage
+        \minipage{0.275\paperwidth}
+          \hfill
+        \endminipage
+        \minipage{0.2475\paperwidth}
+          \ifdefvoid{\@Unternehmenslogo}{%
+            \hfill
+          }{%
+            \includegraphics[width=\linewidth]{\@Unternehmenslogo}%
+          }%
+        \endminipage
+      \end{adjustwidth}
+    \end{figure}
+
+    \vspace*{2cm}
+
+    \begin{flushleft}
+      \Huge
+      \textbf{\@title}%
+      \ifdefvoid{\@subtitle}{%
+        \\[2cm]
+      }{%
+        \\[0.5cm]
+        \LARGE
+        \@subtitle\\[1.5cm]
+      }%
+
+      \LARGE
+      {\@author}\\[0.5cm]
+
+      \large
+      Matrikelnummer: \@Matrikelnummer \\[0.5cm]
+
+      \Large
+      \varArbeit{} im Studiengang\\
+      \@Studiengang
+    \end{flushleft}
+
+    \vspace{0.5cm}
+
+    \begin{flushright}
+      \ifdefvoid{\@Betreuer}{}{%
+        \@BetreuerBezeichnung\\
+        \@Betreuer\\[0.5cm]
+      }%
+
+      \@GutachterBezeichnung\\
+      \@Gutachter\\[0.5cm]
+
+      Eingereicht am \@eingereicht
+    \end{flushright}
+
+    \begin{figure}[b]
+      \begin{adjustwidth}{-\oddsidemargin-1in}{-\rightmargin}
+        \noindent
+        \makebox[0pt][l]{%
+          \raisebox{-\totalheight}[0pt][0pt]{%
+            \includegraphics[width=\paperwidth]{titlepage/banner_bottom}%
+          }%
+        }%
+      \end{adjustwidth}
+    \end{figure}
+  \end{titlepage}
+  \restoregeometry
+}
+
+\newcommand{\aswthesis@moderntitlepage}{%
+  \pagenumbering{alph}%
+  \begin{titlepage}
+    \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}%
+    \centering
+    \vspace*{1cm}
+
+    \textsc{\phantom{\LARGE ASW -- Akademie der Saarwirtschaft}}\\[1.5cm]
+    \textsc{\Large \varArbeit}\\[0.5cm]
+    \textsc{\large \@Studiengang}\\[0.5cm]
+
+    \HRule\\[1cm]
+
+    {\huge\bfseries\@title}\\[0.6cm]
+    \ifdefvoid{\@subtitle}{}{%
+      {\Large\@subtitle}\\[0.6cm]
+    }%
+
+    \HRule\\[1cm]
+
+    {\Large \@author}\\[0.5cm]
+    \textsc{\large Matrikelnummer: \@Matrikelnummer}\\[2cm]
+
+    \begin{minipage}{0.43\textwidth}
+      \begin{flushleft}
+        \large
+        \textit{\@BetreuerBezeichnung}\\
+        \@Betreuer
+      \end{flushleft}
+    \end{minipage}
+    ~
+    \begin{minipage}{0.43\textwidth}
+      \begin{flushright}
+        \large
+        \textit{\@GutachterBezeichnung}\\
+        \@Gutachter
+      \end{flushright}
+    \end{minipage}
+
+    \vspace{0.5cm}
+
+    \begin{figure}[!h]
+      \centering
+      \ifdefvoid{\@Unternehmenslogo}{}{%
+        \minipage{0.3\textwidth}
+          \includegraphics[width=\linewidth]{\@Unternehmenslogo}%
+        \endminipage
+        \minipage{0.25\textwidth}
+          \hfill
+        \endminipage
+      }%
+      \minipage{0.35\textwidth}
+        \includegraphics[width=\linewidth]{titlepage/logo_asw_rgb}%
+      \endminipage
+    \end{figure}
+
+    \vfill\vfill
+
+    \large\@eingereicht
+
+    \vfill
+  \end{titlepage}
+}
+
+\newcommand{\aswtitlepage}{%
+  \ifdefstring{\aswthesis@titlepage}{modern}{%
+    \aswthesis@moderntitlepage
+  }{%
+    \ifdefstring{\aswthesis@titlepage}{classic}{%
+      \aswthesis@classictitlepage
+    }{%
+      \PackageWarning{aswthesis}{Unknown titlepage option `\aswthesis@titlepage'. Falling back to classic}%
+      \aswthesis@classictitlepage
+    }%
+  }%
+}
+\makeatother
+
+% -------- Dokumentrahmen --------------------------------------
+\makeatletter
+\newcommand{\aswthesis@inputblockingnote}[1]{%
+  \IfFileExists{#1}{%
+    \aswthesisfilehascontentTF{#1}{%
+      \setstretch{1.2}%
+      \input{#1}%
+      \setstretch{1}%
+      \pagebreak
+    }{}%
+  }{}%
+}
+
+\newcommand{\aswthesis@blockingnote}{%
+  \ifdefempty{\aswthesis@blockingnotefile}{%
+    \ifaswthesis@blockingnote
+      \PackageWarning{aswthesis}{Option `blockingnote' is deprecated. Use `blockingnotefile=environment/sperrvermerk.tex'}%
+      \aswthesis@inputblockingnote{environment/sperrvermerk.tex}%
+    \fi
+  }{%
+    \aswthesis@inputblockingnote{\aswthesis@blockingnotefile}%
+  }%
+}
+
+\newcommand{\aswthesis@frontmatter}{%
+  \aswtitlepage{}%
+  \newpage
+
+  \pagenumbering{Roman}%
+
+  \aswthesis@blockingnote
+
+  \tableofcontents
+  \newpage
+
+  \iftotalfigures
+    \listoffigures
+  \fi
+
+  \iftotaltables
+    \listoftables
+  \fi
+
+  \iftotallstlistings
+    \addcontentsline{toc}{section}{Listingverzeichnis}%
+    \lstlistoflistings
+  \fi
+  \newpage
+
+  \addcontentsline{toc}{section}{Abkürzungsverzeichnis}%
+  \setstretch{0.5}%
+  \printnoidxglossary[type=acronym,sort=letter,style=listdotted,title=Abkürzungsverzeichnis]%
+  \newpage
+
+  \pagenumbering{arabic}%
+  \setstretch{1.2}%
+}
+
+\newcommand{\aswthesis@embedconfiguredfile}{%
+  \ifdefempty{\aswthesis@embedfile}{}{%
+    \IfFileExists{\aswthesis@embedfile}{%
+      \embedfile[
+        mimetype={application/zip},
+        afrelationship={/Supplement}
+      ]{\aswthesis@embedfile}%
+    }{}%
+  }%
+}
+
+\newcommand{\aswthesis@appendix}{%
+  \ifdefempty{\aswthesis@appendixfile}{}{%
+    \IfFileExists{\aswthesis@appendixfile}{%
+      \aswthesisfilehascontentTF{\aswthesis@appendixfile}{%
+        \clearpage
+        \appendix
+        \input{\aswthesis@appendixfile}%
+        \clearpage
+      }{}%
+    }{}%
+  }%
+}
+
+\newcommand{\aswthesis@declaration}{%
+  \ifdefempty{\aswthesis@declarationfile}{%
+    \PackageError{aswthesis}{Missing declarationfile option}{%
+      The personal declaration is mandatory. Set declarationfile=<path>.%
+    }%
+  }{%
+    \IfFileExists{\aswthesis@declarationfile}{%
+      \aswthesisfilehascontentTF{\aswthesis@declarationfile}{%
+        \input{\aswthesis@declarationfile}%
+      }{%
+        \PackageError{aswthesis}{Declaration file `\aswthesis@declarationfile' has no printed content}{%
+          The personal declaration is mandatory. Add printable content to the file.%
+        }%
+      }%
+    }{%
+      \PackageError{aswthesis}{Declaration file `\aswthesis@declarationfile' not found}{%
+        The personal declaration is mandatory. Check the declarationfile option.%
+      }%
+    }%
+  }%
+}
+
+\newcommand{\aswthesis@backmatter}{%
+  \clearpage
+  \printbibliography[heading=bibintoc]%
+  \clearpage
+
+  \aswthesis@appendix
+
+  \pagenumbering{gobble}%
+  \aswthesis@declaration
+
+  \aswthesis@embedconfiguredfile
+}
+\makeatother
+
+\makeatletter
+\AddToHook{begindocument/end}{\aswthesis@frontmatter}
+\AddToHook{enddocument}{\aswthesis@backmatter}
+\makeatother
+
+% -------- LoT/LoF/Listing-Einträge mit Prefixen ----------------
+\makeatletter
+\ifaswthesis@showtitlesinlists
+  \renewcommand{\l@figure}[2]{\@dottedtocline{1}{1.5em}{2.3em}{Abb.\ #1}{#2}}
+  \renewcommand{\l@table}[2]{\@dottedtocline{1}{1.5em}{2.3em}{Tbl.\ #1}{#2}}
+  \renewcommand{\l@lstlisting}[2]{\@dottedtocline{1}{1.5em}{2.3em}{Lst.\ #1}{#2}}
+\fi
+\makeatother
+
+% -------- Biblatex --------------------------------------------
+% (Siehe biblatex.cfg bei Bedarf separat)
+\RequirePackage[
+  backend=biber,
+  style=ext-authoryear,
+  sorting=nyt,
+  labeldate=year,
+  mergedate=basic,
+  isbn=false,
+  url=false,
+  doi=true,
+  eprint=true,
+  clearlang=true,
+  maxcitenames=2,
+  citexref=true,
+  mincrossrefs=0,
+  backref=true,
+  maxbibnames=100
+]{biblatex}
+
+\setlength\bibitemsep{\baselineskip}
+
+\DefineBibliographyStrings{german}{
+  backrefpage={zitiert auf S\addperiod},
+  backrefpages={zitiert auf S\addperiod}
+}
+
+% .bib automatisch hinzufügen (kann im Dokument überschrieben werden)
+\makeatletter
+\addbibresource{\aswthesis@bibfile}
+\makeatother
+
+% Zeilenumbrüche in URLs im Lit.-Verz. etwas erleichtern
+\setcounter{biburllcpenalty}{1000}
+
+
+% -------- Jahreszahl ohne Klammern im Literaturverzeichnis -----
+\makeatletter
+\ifaswthesis@noparenthesesaroundyear
+  \makeatletter
+  \def\act@on@bibmacro#1#2{%
+    \expandafter#1\csname abx@macro@\detokenize{#2}\endcsname
+  }
+  \def\patchbibmacro{\act@on@bibmacro\patchcmd}
+  \def\pretobibmacro{\act@on@bibmacro\pretocmd}
+  \def\apptobibmacro{\act@on@bibmacro\apptocmd}
+  \def\showbibmacro{\act@on@bibmacro\show}
+  \makeatother
+
+  \patchbibmacro{date+extradate}{%
+    \printtext[parens]%
+    }{%
+    \setunit{\addperiod\space}%
+    \printtext%
+  }{}{}
+\fi
+\makeatother
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~ Literaturverzeichnis + Fußnoten ~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
+% Überschreiben einzelner Stringdefinitionen
+\DefineBibliographyStrings{ngerman}{
+   andothers = {\textit{et~al\adddot}},
+   references = {Literaturverzeichnis}
+}
+
+% Schrägstrich statt "und" zum Trennen von Autoren
+\renewcommand{\multinamedelim}{\space/\space}
+\renewcommand{\finalnamedelim}{\space/\space}
+
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~ Literaturverzeichnis ~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
+\renewcommand*{\subtitlepunct}{\space\textendash\space}
+
+% Author und Jahr immer ausschreiben
+\ExecuteBibliographyOptions{dashed=false}
+
+% Die Liste der Authoren immer "Nachname, Vorname"
+% Statt: Erster "Nachname, Vorname" alle anderen "Vorname Nachname"
+\DeclareNameAlias{sortname}{family-given}
+
+% Doppelpunkt vor Titel
+\DeclareDelimFormat[bib,biblist]{nametitledelim}{\addcolon\space}
+
+% Unterdrücken des Punkts am Ende eines Eintrags
+\renewcommand{\finentrypunct}{}
+
+% Präfixe "Bd." und "Nr." vor jeweiligen Zahlen
+\DeclareFieldFormat[article]{volume}{\bibstring{volume}~#1}
+\DeclareFieldFormat[article]{number}{\bibstring{number}~#1}
+
+% Komma vor und nach Band und Nummer Angabe
+\renewbibmacro*{volume+number+eid}{%
+  \setunit*{\addcomma\space}% NEW
+  \printfield{volume}%
+%  \setunit*{\adddot}% DELETED
+  \setunit*{\addcomma\space}% NEW
+  \printfield{number}%
+  \setunit{\addcomma\space}%
+  \printfield{eid}}
+
+% Kursive Titel für article, inproceedings, incollection, inbook
+\DeclareFieldFormat[article,inproceedings,incollection, inbook]{title}{\mkbibemph{#1}}
+
+% Kommas als Feldtrenner
+\renewcommand*{\newunitpunct}{\addcomma\space}
+
+% Klammern um Hrsg. und kein Komma 
+\DeclareFieldFormat{editortype}{\mkbibparens{#1}}
+\DeclareDelimFormat{editortypedelim}{\addspace}
+
+%o.J. bei Online-Quellen ohne year
+\DefineBibliographyStrings{german}{
+    nodate = {{}o.\adddot\space J\adddot}
+}
+\DeclareLabeldate{%
+  \field{date}
+  \field{year}
+  \field{eventdate}
+  \field{origdate}
+  \literal{nodate}
+}
+
+% Display RFCs as articles
+\DeclareSourcemap{
+  \maps[datatype=bibtex]{
+    % Convert *all* misc to article
+    \map{
+      \step[typesource=misc, typetarget=article]
+    }
+  }
+}
+
+
+
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Fußnoten ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
+
+% Jahreszahl in Klammern
+\makeatletter
+\ifaswthesis@noparenthesesaroundyear\else
+  \DeclareInnerCiteDelims{footcite}{\bibopenparen}{\bibcloseparen}
+  \DeclareInnerCiteDelims{cite}{\bibopenparen}{\bibcloseparen}
+\fi
+\makeatother
+% -------- PDF/A-Setup inkl. sRGB ICC --------------------------
+\makeatletter
+\ifaswthesis@pdfa
+  % Achtung: nutzt pdfTeX-Primitive; bei LuaLaTeX/XeLaTeX ggf. anpassen
+  \immediate\pdfobj stream attr{/N 3^^J/Alternate/DeviceRGB} file{sRGB.icc}
+  \pdfcatalog{
+    /PageMode /UseNone
+    /OutputIntents [
+      <<
+        /Type /OutputIntent
+        /S /GTS_PDFA1
+        /DestOutputProfile \the\pdflastobj\space 0 R
+        /OutputConditionIdentifier (sRGB IEC61966-2.1 (Equivalent to www.srgb.com 1998 HP profile))
+        /Info(sRGB IEC61966-2.1 (Equivalent to www.srgb.com 1998 HP profile))
+        /RegistryName (http://www.color.org/)
+      >>
+    ]
+  }%
+\fi
+\makeatother
+
+% -------- Hyperref-Setup --------------------------------------
+\hypersetup{
+  colorlinks      = true,
+  urlcolor        = black,
+  linkcolor       = black,
+  citecolor       = black,
+  pdfapart        = 3,
+  pdfaconformance = B
+}
+
+% -------- Absatzformatierung ----------------------------------
+\setlength{\parskip}{1.5ex plus0.5ex minus0.3ex}
+\setlength{\parindent}{0ex}
+
+\providecommand{\bachelorarbeit}{Bachelorarbeit}
+\newcommand{\conditionalPageBreak}{%
+  \ifx\varArbeit\bachelorarbeit
+    \clearpage%
+  \fi
+}
+
+% -------- Nützliche Kurzbefehle (optional) --------------------
+% \onehalfspacing etc. kommen aus setspace
+% ==============================================================
