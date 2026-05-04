@@ -245,4 +245,4 @@ Kontakt
 
 Wenn Probleme auftreten, können gerne GitHub-Issues aufgemacht werden.
 
-Für Fragen stehe ich gerne zur Verfügung und bin über die E-Mail-Adresse [leonrheinert@gmail.com](mailto:leonrheinert@gmail.com) erreichbar.
+Für Fragen steht Prof. Dr. Andreas Karrenbauer per [E-Mail](mailto:info@asw-ggmbh.de) gerne zur Verfügung.
