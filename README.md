@@ -56,6 +56,7 @@ Die wichtigsten Angaben zur Arbeit stehen direkt in main.tex. Dort werden die Pa
   appendixfile=sections/anhang.tex,
   declarationfile=environment/pers_erklaerung.tex,
   embedfile=onlinequellen.zip,
+  companylogofile=images/logo_company.png,
   thesis=Bachelorarbeit
 ]{aswthesis}
 
@@ -75,6 +76,7 @@ Die Option `blockingnotefile=...` bindet einen Sperrvermerk nach der Titelseite 
 Die Option `appendixfile=...` bindet den Anhang automatisch am Dokumentende ein, wenn die Option gesetzt ist, die Datei existiert und gedruckten Inhalt enthält.
 Die Option `declarationfile=...` legt die verpflichtende persönliche Erklärung fest. Die Datei muss existieren und gedruckten Inhalt enthalten.
 Die Option `embedfile=...` bettet eine Datei, zum Beispiel einen ZIP-Export der Onlinequellen, in das PDF ein, wenn die Option gesetzt ist und die Datei existiert.
+Die Option `companylogofile=...` bindet ein Unternehmenslogo auf der Titelseite ein, wenn die Option gesetzt ist und die Datei existiert.
 
 Für die tägliche Arbeit sind vor allem diese Dateien relevant:
 
