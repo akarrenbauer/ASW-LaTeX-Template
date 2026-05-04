@@ -303,7 +303,7 @@
         \@Betreuer
       \end{flushleft}
     \end{minipage}
-    ~
+    \hfill
     \begin{minipage}{0.43\textwidth}
       \begin{flushright}
         \large
@@ -357,7 +357,7 @@
   \IfFileExists{#1}{%
     \aswthesisfilehascontentTF{#1}{%
       \setstretch{1.2}%
-      \input{#1}%
+      \input{#1}% chktex 27
       \setstretch{1}%
       \pagebreak
     }{}%
@@ -426,7 +426,7 @@
       \aswthesisfilehascontentTF{\aswthesis@appendixfile}{%
         \clearpage
         \appendix
-        \input{\aswthesis@appendixfile}%
+        \input{\aswthesis@appendixfile}% chktex 27
         \clearpage
       }{}%
     }{}%
@@ -441,7 +441,7 @@
   }{%
     \IfFileExists{\aswthesis@declarationfile}{%
       \aswthesisfilehascontentTF{\aswthesis@declarationfile}{%
-        \input{\aswthesis@declarationfile}%
+        \input{\aswthesis@declarationfile}% chktex 27
       }{%
         \PackageError{aswthesis}{Declaration file `\aswthesis@declarationfile' has no printed content}{%
           The personal declaration is mandatory. Add printable content to the file.%
@@ -647,7 +647,7 @@
         /S /GTS_PDFA1
         /DestOutputProfile \the\pdflastobj\space 0 R
         /OutputConditionIdentifier (sRGB IEC61966-2.1 (Equivalent to www.srgb.com 1998 HP profile))
-        /Info(sRGB IEC61966-2.1 (Equivalent to www.srgb.com 1998 HP profile))
+        /Info(sRGB IEC61966-2.1 (Equivalent to www.srgb.com 1998 HP profile)) % chktex 36
         /RegistryName (http://www.color.org/)
       >>
     ]
