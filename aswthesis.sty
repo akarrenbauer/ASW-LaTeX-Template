@@ -14,6 +14,7 @@
 %   appendixfile=<pfad zur Anhang-Datei> (Default: leer)
 %   declarationfile=<pfad zur persönlichen Erklärung> (Default: environment/pers_erklaerung.tex)
 %   embedfile=<pfad zur einzubettenden Datei> (Default: leer)
+%   companylogofile=<pfad zum Unternehmenslogo> (Default: leer)
 %   showtitlesinlists=true/false (Default: true)
 %   noparenthesesaroundyear=true/false      (Default: false)  -> Jahreszahl ohne Klammern im Lit.-Verz.
 %   pdfa=true/false             (Default: true)   -> PDF/A-Konfiguration inkl. ICC-Profil
@@ -24,6 +25,7 @@
 \DeclareStringOption[]{appendixfile}
 \DeclareStringOption[environment/pers_erklaerung.tex]{declarationfile}
 \DeclareStringOption[]{embedfile}
+\DeclareStringOption[]{companylogofile}
 \DeclareBoolOption[true]{showtitlesinlists}
 \DeclareBoolOption[false]{noparenthesesaroundyear}
 \DeclareBoolOption[false]{blockingnote}
@@ -130,7 +132,6 @@
 \configcommand{Matrikelnummer}{}
 \configcommand{Studiengang}{}
 \configcommand{Unternehmen}{}
-\configcommand{Unternehmenslogo}{}
 \configcommand{eingereicht}{\today}
 
 \makeatletter
@@ -166,6 +167,19 @@
 \fi
 \makeatother
 
+\makeatletter
+\newcommand{\aswthesis@ifcompanylogoTF}[2]{%
+  \ifdefempty{\aswthesis@companylogofile}{#2}{%
+    \IfFileExists{\aswthesis@companylogofile}{#1}{#2}%
+  }%
+}
+\newcommand{\aswthesis@companylogo}[1]{%
+  \aswthesis@ifcompanylogoTF{%
+    \includegraphics[width=#1]{\aswthesis@companylogofile}%
+  }{}%
+}
+\makeatother
+
 % -------- Projektkonfiguration optional laden -----------------
 % Falls vorhanden, projektspezifische Makros laden:
 \IfFileExists{environment/macros.tex}{\input{environment/macros.tex}}{}
@@ -198,10 +212,10 @@
           \hfill
         \endminipage
         \minipage{0.2475\paperwidth}
-          \ifdefvoid{\@Unternehmenslogo}{%
-            \hfill
+          \aswthesis@ifcompanylogoTF{%
+            \aswthesis@companylogo{\linewidth}%
           }{%
-            \includegraphics[width=\linewidth]{\@Unternehmenslogo}%
+            \hfill
           }%
         \endminipage
       \end{adjustwidth}
@@ -302,9 +316,9 @@
 
     \begin{figure}[!h]
       \centering
-      \ifdefvoid{\@Unternehmenslogo}{}{%
+      \aswthesis@ifcompanylogoTF{%
         \minipage{0.3\textwidth}
-          \includegraphics[width=\linewidth]{\@Unternehmenslogo}%
+          \aswthesis@companylogo{\linewidth}%
         \endminipage
         \minipage{0.25\textwidth}
           \hfill
