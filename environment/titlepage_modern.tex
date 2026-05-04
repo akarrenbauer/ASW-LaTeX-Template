@@ -1,3 +1,6 @@
+% chktex-file 1
+% chktex-file 8
+% chktex-file 39
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~ Modern Title Page ~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
@@ -16,7 +19,7 @@
 	
 	\textsc{\Large \varArbeit}\\[0.5cm]
 	
-	\textsc{\large \varStudiengang}\\[0.5cm]
+	\textsc{\large \@Studiengang}\\[0.5cm]
 	
 	%------------------------------------------------%
 	%	Titel
@@ -26,6 +29,10 @@
 	
 	{\huge\bfseries\@title}\\[0.6cm]
 	
+	\ifdefvoid{\@subtitle}{}{%
+		{\Large\@subtitle}\\[0.6cm]
+	}%
+	
 	\HRule\\[1cm]
 	
 	%------------------------------------------------%
@@ -34,7 +41,7 @@
 
 	{\Large \@author}\\[0.5cm]
 
-	\textsc{\large Matrikelnummer: \varMartrikelnummer}\\[2cm]
+	\textsc{\large Matrikelnummer: \@Matrikelnummer}\\[2cm]
 
 	%------------------------------------------------%
 	%	Betreuer
@@ -43,16 +50,16 @@
 	\begin{minipage}{0.43\textwidth}
 		\begin{flushleft}
 			\large
-			\textit{Betrieblicher Betreuer}\\
-			\varBetrBetreuer
+			\textit{\@BetreuerBezeichnung}\\
+			\@Betreuer
 		\end{flushleft}
 	\end{minipage}
 	~
 	\begin{minipage}{0.43\textwidth}
 		\begin{flushright}
 			\large
-			\textit{ASW-Gutachter}\\
-			\varASWGutachter
+			\textit{\@GutachterBezeichnung}\\
+			\@Gutachter
 		\end{flushright}
 	\end{minipage}
 	
@@ -64,16 +71,16 @@
 
 	\begin{figure}[!h]
 		\center
-		\ifdefined\varCompanyLogoFile
+		\ifdefvoid{\@Unternehmenslogo}{}{%
 			\minipage{0.3\textwidth}
-				\includegraphics[width=\linewidth]{\varCompanyLogoFile}
+				\includegraphics[width=\linewidth]{\@Unternehmenslogo}
 			\endminipage
 			\minipage{0.25\textwidth}
 				\hfill
 			\endminipage
-		\fi
+		}%
 		\minipage{0.35\textwidth}
-			\includegraphics[width=\linewidth]{titlepage/logo_asw}
+			\includegraphics[width=\linewidth]{titlepage/logo_asw_rgb}
 		\endminipage
 	\end{figure}
 	
@@ -83,7 +90,7 @@
 	
 	\vfill\vfill
 
-	\large\varEingereichtAm
+	\large\@eingereicht
 	
 	\vfill
 	

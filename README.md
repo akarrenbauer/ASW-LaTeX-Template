@@ -45,19 +45,52 @@ Dies kann dann als lokales Projekt entpackt oder aber auf Overleaf hochgeladen w
 Als erster Schritt ist es sinnvoll, aus dem Projekt in dem aktuellen Zustand eine PDF-Datei erfolgreich zu generieren.
 
 
-### Projekteinstellungen
+### Projekt bearbeiten
 
-Die ersten Änderungen sollten in der environment/config.tex getätigt werden.
-Hier können Informationen zur Arbeit hinterlegt und Konfigurationen bezüglich der Darstellung getroffen werden.
-Somit kann das Titelblatt auf ein modernes Aussehen konfiguriert werden und sieht wie folgt aus
+Die wichtigsten Angaben zur Arbeit stehen direkt in main.tex. Dort werden die Paketoptionen von aswthesis gesetzt und die Daten für die Titelseiten gepflegt:
+
+```latex
+\usepackage[
+  %titlepage=modern,
+  %blockingnotefile=environment/sperrvermerk.tex,
+  appendixfile=sections/anhang.tex,
+  declarationfile=environment/pers_erklaerung.tex,
+  embedfile=onlinequellen.zip,
+  thesis=Bachelorarbeit
+]{aswthesis}
+
+\title{Titel der Arbeit}
+\subtitle{Optionaler Untertitel}
+\author{Max Mustermann}
+\Betreuerin{Erika Musterfrau}
+\Gutachter{Prof.\ Dr.\ Andreas Karrenbauer}
+```
+
+Für weibliche Bezeichnungen stehen `\Betreuerin{...}` und `\Gutachterin{...}` zur Verfügung.
+
+Die Option `titlepage=modern` aktiviert das moderne Titelblatt.
 ![](images/titlepage_modern.png)
 
-Des Weiteren dient diese Datei dazu, die Präambel manuell arbeitsspezifische Einstellungen zu erweitern.
+Die Option `blockingnotefile=...` bindet einen Sperrvermerk nach der Titelseite ein, wenn die Option gesetzt ist, die Datei existiert und gedruckten Inhalt enthält.
+Die Option `appendixfile=...` bindet den Anhang automatisch am Dokumentende ein, wenn die Option gesetzt ist, die Datei existiert und gedruckten Inhalt enthält.
+Die Option `declarationfile=...` legt die verpflichtende persönliche Erklärung fest. Die Datei muss existieren und gedruckten Inhalt enthalten.
+Die Option `embedfile=...` bettet eine Datei, zum Beispiel einen ZIP-Export der Onlinequellen, in das PDF ein, wenn die Option gesetzt ist und die Datei existiert.
+
+Für die tägliche Arbeit sind vor allem diese Dateien relevant:
+
+* main.tex: Paketoptionen und Informationen zur Arbeit
+* sections/textteil.tex: Struktur und Inhalt des Hauptteils
+* sections/anhang.tex: optionaler Anhang
+* references.bib: Literaturdatenbank
+* environment/acronym.tex: Abkürzungen
+* environment/sperrvermerk.tex: optionaler Sperrvermerk
+* environment/pers_erklaerung.tex: verpflichtende persönliche Erklärung
+* environment/macros.tex: eigene Kurzbefehle und Silbentrennungen
 
 
 ### Struktur anlegen
 
-Es ist empfehlenswert, jedes Kapitel in eine eigene Datei auszulagern und die Struktur in sections/root festzulegen.
+Es ist empfehlenswert, jedes Kapitel in eine eigene Datei auszulagern und die Struktur in sections/textteil.tex festzulegen.
   
 
 
