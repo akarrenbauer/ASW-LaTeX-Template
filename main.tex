@@ -4,6 +4,7 @@
 
 % CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
 % Siehe auch LICENCE.txt
+% basierend auf einer Vorlage von León Rheinert (https://github.com/rheinertleon/LaTeX-Template)
 
 % Artikel-Klasse mit a4paper Option für die Seitenränder
 \documentclass[12pt,a4paper]{article}
@@ -12,13 +13,13 @@
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Präambel ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
 \usepackage[
-  %titlepage=modern,
-  %blockingnotefile=environment/sperrvermerk.tex,
-  bibfile=references.bib,
-  embedfile=onlinequellen.zip,
-  appendixfile=sections/anhang.tex,
-  declarationfile=environment/pers_erklaerung.tex,
-  thesis=Bachelorarbeit
+  %titlepage=modern, % einkommentieren für eine alternative Titelseite
+  %blockingnotefile=environment/sperrvermerk.tex, % einkommentieren für Sperrvermerk
+  bibfile=references.bib, % Bib-Datei für Quellen
+  embedfile=onlinequellen.zip, % auskommentieren, wenn nicht erwünscht
+  appendixfile=sections/anhang.tex, % auskommentieren, wenn nicht erwünscht
+  declarationfile=environment/pers_erklaerung.tex, % muss angepasst und abgegeben werden
+  thesis=Bachelorarbeit % alternativ: Studienarbeit, Exposé
 ]{aswthesis}
 
 % ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %
