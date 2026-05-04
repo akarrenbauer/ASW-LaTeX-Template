@@ -18,8 +18,7 @@ oder durch doppelten Backslash wie vor dieser Zeile.
       \centering
       \includegraphics[width=0.45\textwidth]{mvc}
       % caption[im Verzeichnis]{unter der Abbildung}
-      \caption[Aufbau von \acrlong{MVC}]{Aufbau von \gls{MVC}.\\Quelle: Angelehnt an~\cite{curry2008flexible}}
-      \label{fig_mvc}
+      \caption[Aufbau von \acrlong{MVC}]{Aufbau von \gls{MVC}.\\Quelle: Angelehnt an~\cite{curry2008flexible}}\label{fig_mvc}
     \end{wrapfigure}
     Bilder können sowohl als eigenständiges Blockelement, als auch mit dem Text in einer Zeile mit fließen.
     Jedoch entscheidet \LaTeX, wo genau die Bilder angezeigt werden, weshalb sie nicht unbedingt an der Stelle erscheinen,
@@ -30,8 +29,7 @@ oder durch doppelten Backslash wie vor dieser Zeile.
     \begin{figure}[tbh]
       \centering
       \includegraphics[width=\textwidth]{vsc_latex_workshop}
-      \caption{Einblick in die Entwicklungsumgebung Visual Studio Code}
-      \label{fig_prototyp_desktop}
+      \caption{Einblick in die Entwicklungsumgebung Visual Studio Code}\label{fig_prototyp_desktop}
     \end{figure}
 
 \subsubsection{Tabellen}
@@ -47,17 +45,16 @@ oder durch doppelten Backslash wie vor dieser Zeile.
     Neu geschaffene Stellen & 3         & 1        & 0          & 2  \\
     Geplante neue Stellen   & 2         & 0        & 2          & 0  \\ \bottomrule
     \end{tabular}
-    \caption{Übersicht besetzter und geplanter Stellen im Unternehmen}
-    \label{tbl_proglang}
+    \caption{Übersicht besetzter und geplanter Stellen im Unternehmen}\label{tbl_proglang}
   \end{table}
 
 \subsection{Zitate}
-  In \LaTeX gibt es verschiedene Arten wörtlich zu zitieren.
+  In \LaTeX{} gibt es verschiedene Arten wörtlich zu zitieren.
   Zum einen kann es inline durch einfache Anführungszeichen gemacht werden, 
   zum anderen gibt es eine fertige Umgebung, welche das Zitat im Dokument besonders hervorhebt.
   
   \subsubsection{Inline Zitat}
-    "`\gls{AWATAD}"'\footcite[S. 2703]{timmerer2019journey}, zu deutsch überall, jederzeit, auf jedem Gerät,
+    \enquote{\gls{AWATAD}}\footcite[S. 2703]{timmerer2019journey}, zu deutsch überall, jederzeit, auf jedem Gerät,
     sind die heutigen Erwartungen der Nutzer im Kontext von Webapplikationen.
     \vgl{timmerer2019journey}{S. 2703--2704}    
     Hierbei ist auf die Codierung der Anführungszeichen zu achten.
@@ -65,8 +62,8 @@ oder durch doppelten Backslash wie vor dieser Zeile.
   \subsubsection{Blockzitat}
     Balzert definiert Softwaretechnik als
     \begin{quotation}
-      "`Zielorientierte Bereitstellung und systematische Verwendung von Prinzipien, Methoden und Werkzeugen 
-      für die arbeitsteilige, ingenieurmäßige Entwicklung und Anwendung von umfangreichen Softwaresystemen."'\footcite[S. 17]{balzert2009lehrbuch}    
+      \enquote{Zielorientierte Bereitstellung und systematische Verwendung von Prinzipien, Methoden und Werkzeugen
+      für die arbeitsteilige, ingenieurmäßige Entwicklung und Anwendung von umfangreichen Softwaresystemen.}\footcite[S. 17]{balzert2009lehrbuch}
     \end{quotation}
     Dabei betont er, dass etablierte Prinzipien und Methoden, sogenannte 
     \emph{Best Practices}\footnote{\emph{engl.} empfohlene Vorgehensweise},
@@ -88,7 +85,7 @@ oder durch doppelten Backslash wie vor dieser Zeile.
     \end{itemize}
 
     \paragraphheader{Bonusebene}
-    Falls - wie hier - mehr Gliederungsebenen benötigt werden, als die Dokumentklasse zulässt, 
+    Falls -- wie hier -- mehr Gliederungsebenen benötigt werden, als die Dokumentklasse zulässt, 
     kann mittels dem vordefinierten paragraphheader-Befehl eine weitere, unnummerierte Ebene eingefügt werden.
    
   \subsubsection{Mathe-Modus}
